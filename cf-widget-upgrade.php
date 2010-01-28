@@ -805,7 +805,7 @@ function cfwu_add_readme() {
 add_action('admin_init','cfwu_add_readme');
 
 /**
- * return the contents of the CF Duplicate README file
+ * return the contents of the CF Widget Upgrade README file
  *
  * @return string
  */
