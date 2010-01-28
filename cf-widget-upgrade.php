@@ -334,18 +334,20 @@ function cfwu_admin_page() {
 								</table>
 								<?php
 							}
+							?>
+							<form action="" method="post">
+								<p class="submit" style="border-top: none;">
+									<input type="hidden" name="cf_action" value="cfwu-process" />
+									<input type="submit" name="submit" value="<?php _e('Preprocess Widgets', 'cfwu'); ?>" class="button-primary button" />
+								</p>
+							</form>
+							<?php
 						}
 						else {
 							echo '<h4>'.__('No updatable widgets', 'cfwu').'</h4>';
 						}
 						?>
 					</div>
-					<form action="" method="post">
-						<p class="submit" style="border-top: none;">
-							<input type="hidden" name="cf_action" value="cfwu-process" />
-							<input type="submit" name="submit" value="<?php _e('Preprocess Widgets', 'cfwu'); ?>" class="button-primary button" />
-						</p>
-					</form>
 					<div class="clear"></div>
 				</div>
 			<?php
@@ -789,4 +791,32 @@ function cfox_preload_widget_display_settings_debug($key) {
 	return array('content' => $html, 'new_key' => $new_key);
 }
 */
+
+## README Handling
+
+/**
+ * Enqueue the readme function
+ */
+function cfwu_add_readme() {
+	if(function_exists('cfreadme_enqueue')) {
+		cfreadme_enqueue('cfwu','cfwu_readme');
+	}
+}
+add_action('admin_init','cfwu_add_readme');
+
+/**
+ * return the contents of the CF Duplicate README file
+ *
+ * @return string
+ */
+function cfwu_readme() {
+	$file = realpath(dirname(__FILE__)).'/README.txt';
+	if(is_file($file) && is_readable($file)) {
+		$markdown = file_get_contents($file);
+		$markdown = preg_replace('|!\[(.*?)\]\((.*?)\)|','![$1]('.trailingslashit(ABSPATH).'wp-content/mu-plugins/cf-widget-upgrade/$2)',$markdown);
+		return $markdown;
+	}
+	return null;
+}
+
 ?>
